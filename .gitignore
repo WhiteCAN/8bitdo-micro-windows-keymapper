@@ -1,0 +1,28 @@
+# Local reverse-engineering artifacts
+apks/
+apktool_out/
+decompiled/
+platform-tools/
+platform-tools.zip
+apktool.jar
+btsnoop_hci.log
+btsnooz.py
+shbleutils_capture.log
+write_packets.txt
+__pycache__/
+
+# Private notes that may contain device identifiers or raw captures
+docs/private/
+
+# Build outputs
+bin/
+obj/
+.vs/
+.idea/
+
+# OS/editor noise
+*.user
+*.suo
+*.tmp
+Thumbs.db
+Desktop.ini
