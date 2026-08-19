@@ -6,6 +6,17 @@ MicroKey Studio is an unofficial Windows key mapping tool for the 8BitDo Micro.
 
 The project is built with C#/.NET 8 and WPF. This preview supports reading device settings, editing local profiles, and generated writes to the currently connected device with backup and readback safeguards. Device save has been hardware-checked; final hardware verification of restore remains.
 
+The planning, implementation, debugging, and documentation for this project were completed entirely through vibe coding with OpenAI Codex.
+
+## Download
+
+[Download MicroKey Studio 0.1.0-preview.31 for Windows x64 (portable ZIP)](https://github.com/WhiteCAN/8bitdo-micro-windows-keymapper/releases/download/v0.1.0-preview.31/MicroKeyStudio-v0.1.0-preview.31-2026-08-19-win-x64-portable.zip)
+
+No installation is required. Extract the ZIP and run `MicroKeyStudio.App.exe`. Windows SmartScreen may display a warning.
+
+- [Release notes](https://github.com/WhiteCAN/8bitdo-micro-windows-keymapper/releases/tag/v0.1.0-preview.31)
+- SHA-256: `3766AA0ADB47E9C1B33375F69687A8BF6A906AC88E0ED2F235FD41BDB37762DF`
+
 ## Status
 
 Current version: `0.1.0-preview.31` released on `2026-08-19`.
