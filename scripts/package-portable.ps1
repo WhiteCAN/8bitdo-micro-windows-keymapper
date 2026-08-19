@@ -35,6 +35,7 @@ dotnet publish $appProject `
     --output $publishDir
 
 Copy-Item -LiteralPath (Join-Path $repoRoot "README.md") -Destination $publishDir
+Copy-Item -LiteralPath (Join-Path $repoRoot "README.en.md") -Destination $publishDir
 Copy-Item -LiteralPath (Join-Path $repoRoot "README.ko.md") -Destination $publishDir
 Copy-Item -LiteralPath (Join-Path $repoRoot "CHANGELOG.md") -Destination $publishDir
 Copy-Item -LiteralPath (Join-Path $repoRoot "CHANGELOG.ko.md") -Destination $publishDir
