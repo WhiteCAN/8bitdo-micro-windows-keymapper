@@ -1,0 +1,511 @@
+<Window x:Class="MicroKeyStudio.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MicroKey Studio"
+        Height="780"
+        Width="1280"
+        MinHeight="700"
+        MinWidth="1120"
+        Background="#f3f4f6"
+        Foreground="#1f2933"
+        FontFamily="Segoe UI">
+    <Window.Resources>
+        <SolidColorBrush x:Key="SurfaceBrush" Color="#ffffff" />
+        <SolidColorBrush x:Key="PanelBrush" Color="#f8fafc" />
+        <SolidColorBrush x:Key="BorderBrushSoft" Color="#d9e0e7" />
+        <SolidColorBrush x:Key="TextMutedBrush" Color="#687482" />
+        <SolidColorBrush x:Key="AccentBrush" Color="#207aa0" />
+        <SolidColorBrush x:Key="AccentLightBrush" Color="#e8f4f8" />
+
+        <Style x:Key="ToolbarButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="32" />
+            <Setter Property="MinWidth" Value="88" />
+            <Setter Property="Padding" Value="14,0" />
+            <Setter Property="Margin" Value="6,0,0,0" />
+            <Setter Property="Foreground" Value="#1f2933" />
+            <Setter Property="Background" Value="#ffffff" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrushSoft}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button" BasedOn="{StaticResource ToolbarButtonStyle}">
+            <Setter Property="Foreground" Value="#ffffff" />
+            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+        </Style>
+
+        <Style x:Key="MappingButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="34" />
+            <Setter Property="Width" Value="106" />
+            <Setter Property="Foreground" Value="#ffffff" />
+            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+
+        <Style x:Key="KeyOptionButtonStyle" TargetType="Button">
+            <Setter Property="MinWidth" Value="64" />
+            <Setter Property="Height" Value="48" />
+            <Setter Property="Margin" Value="0,0,6,6" />
+            <Setter Property="Padding" Value="8,0" />
+            <Setter Property="Foreground" Value="#1f2933" />
+            <Setter Property="Background" Value="#ffffff" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrushSoft}" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <Style x:Key="SectionLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextMutedBrush}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="64" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Row="0" Grid.ColumnSpan="2" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="0,0,0,1">
+            <Grid Margin="18,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="MicroKey Studio" FontSize="17" FontWeight="SemiBold" />
+                    <Border Margin="12,0,0,0" Padding="8,3" CornerRadius="10" Background="{StaticResource AccentLightBrush}">
+                        <TextBlock Text="0.1.0-preview.31" Foreground="{StaticResource AccentBrush}" FontSize="11" FontWeight="SemiBold" />
+                    </Border>
+                </StackPanel>
+                <TextBlock Grid.Column="1"
+                           Text="{Binding Status}"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           Foreground="{StaticResource TextMutedBrush}"
+                           Margin="0,0,0,0" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="0,0,1,0">
+            <Grid Margin="18">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel>
+                    <TextBlock Text="{Binding Text.ProfileAndButtons}" FontSize="18" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding Text.SidebarDescription}" TextWrapping="Wrap" Margin="0,6,0,0" Foreground="{StaticResource TextMutedBrush}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Margin="0,24,0,0">
+                    <TextBlock Text="{Binding Text.DeviceSettings}" Style="{StaticResource SectionLabelStyle}" />
+                    <Button Content="{Binding Text.FindDevice}" Command="{Binding ScanCommand}" Height="32" Margin="0,8,0,0" Style="{StaticResource ToolbarButtonStyle}" />
+                    <TextBlock Text="{Binding Text.Profile}" Style="{StaticResource SectionLabelStyle}" Margin="0,14,0,0" />
+                    <ComboBox Height="34"
+                              Margin="0,8,0,0"
+                              ItemsSource="{Binding DeviceProfiles}"
+                              SelectedItem="{Binding SelectedProfile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              DisplayMemberPath="DisplayName" />
+                    <TextBlock Text="{Binding ProfileSummaryText}"
+                               TextWrapping="Wrap"
+                               Margin="0,6,0,0"
+                               Foreground="{StaticResource TextMutedBrush}" />
+                    <Button Content="{Binding Text.LoadSavedSettings}" Command="{Binding LoadSelectedProfileCommand}" Height="32" Margin="0,8,0,0" Style="{StaticResource PrimaryButtonStyle}" />
+                    <TextBlock Text="{Binding Text.ProfileName}" Style="{StaticResource SectionLabelStyle}" Margin="0,14,0,0" />
+                    <TextBox Text="{Binding ProfileNameDraft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             Height="32"
+                             Margin="0,8,0,0" />
+                    <StackPanel Margin="0,8,0,0">
+                        <Button Content="{Binding Text.CreateProfile}"
+                                Command="{Binding CreateProfileCommand}"
+                                Height="32"
+                                Margin="0"
+                                Style="{StaticResource ToolbarButtonStyle}" />
+                        <Button Content="{Binding Text.RenameProfile}"
+                                Command="{Binding RenameProfileCommand}"
+                                Height="32"
+                                Margin="0,6,0,0"
+                                Style="{StaticResource ToolbarButtonStyle}" />
+                        <Button Content="{Binding Text.DeleteProfile}"
+                                Command="{Binding DeleteProfileCommand}"
+                                Height="32"
+                                Margin="0,6,0,0"
+                                Style="{StaticResource ToolbarButtonStyle}" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding Text.DeviceHelp}" TextWrapping="Wrap" Margin="0,8,0,0" Foreground="{StaticResource TextMutedBrush}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Margin="0,24,0,0">
+                    <TextBlock Text="{Binding Text.Settings}" Style="{StaticResource SectionLabelStyle}" />
+                    <TextBlock Text="{Binding Text.Language}" Margin="0,8,0,0" Foreground="{StaticResource TextMutedBrush}" />
+                    <ComboBox Height="34"
+                              Margin="0,6,0,0"
+                              ItemsSource="{Binding Languages}"
+                              SelectedItem="{Binding SelectedLanguage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+                <Border Grid.Row="3" Margin="0,24,0,0" Padding="12" Background="#ffffff" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1" CornerRadius="6" VerticalAlignment="Top">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Text.SyncSafety}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding Text.SyncSafetyDescription}" TextWrapping="Wrap" Margin="0,6,0,0" Foreground="{StaticResource TextMutedBrush}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Grid.Column="1" Margin="24">
+            <Grid x:Name="MappingOverview">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Visible" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsMappingEditorOpen}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Left">
+                    <TextBlock Text="{Binding Text.ButtonMapping}" FontSize="22" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding Text.MappingHelp}" Foreground="{StaticResource TextMutedBrush}" Margin="0,4,0,0" />
+                </StackPanel>
+                <CheckBox DockPanel.Dock="Right"
+                          Content="{Binding Text.DisableSleep}"
+                          IsChecked="{Binding IsSleepDisabled, Mode=TwoWay}"
+                          IsEnabled="{Binding IsSleepSettingSupported}"
+                          ToolTip="{Binding SleepSettingStatusText}"
+                          ToolTipService.ShowOnDisabled="True"
+                          VerticalAlignment="Center"
+                          Foreground="{StaticResource TextMutedBrush}" />
+            </DockPanel>
+
+            <Border Grid.Row="1" Margin="0,18,0,0" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1" CornerRadius="8">
+                <Grid Margin="22">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="204" />
+                        <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="204" />
+                    </Grid.ColumnDefinitions>
+
+                    <ItemsControl Grid.Column="0" ItemsSource="{Binding LeftMappings}" VerticalAlignment="Center">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Height="50">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="110" />
+                                        <ColumnDefinition Width="24" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <Button Content="{Binding Action}"
+                                                Command="{Binding DataContext.SelectMappingCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource MappingButtonStyle}" />
+                                        <TextBlock Text="{Binding SourceSlotText}" HorizontalAlignment="Center" Foreground="{StaticResource TextMutedBrush}" FontSize="10" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="1" Text="‹" Foreground="#7d8790" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <TextBlock Grid.Column="2" Text="{Binding Button}" Foreground="{StaticResource AccentBrush}" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Grid Grid.Column="1" Margin="8,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Canvas x:Name="DeviceMappingCanvas" Grid.Row="0" Width="430" Height="360" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image Source="Assets/Images/8bitdo-micro-blue-front.png"
+                                   Stretch="Uniform"
+                                   Width="360"
+                                   Canvas.Left="36"
+                                   Canvas.Top="92"
+                                   RenderOptions.BitmapScalingMode="HighQuality" />
+
+                            <Canvas x:Name="ConnectorOverlay"
+                                    Width="430"
+                                    Height="360"
+                                    IsHitTestVisible="False">
+                                <Canvas.Resources>
+                                    <Style TargetType="Polyline">
+                                        <Setter Property="Stroke" Value="#167DA5" />
+                                        <Setter Property="StrokeThickness" Value="1.6" />
+                                        <Setter Property="StrokeLineJoin" Value="Round" />
+                                        <Setter Property="StrokeStartLineCap" Value="Round" />
+                                        <Setter Property="StrokeEndLineCap" Value="Round" />
+                                    </Style>
+                                    <Style TargetType="Ellipse">
+                                        <Setter Property="Width" Value="7" />
+                                        <Setter Property="Height" Value="7" />
+                                        <Setter Property="Fill" Value="#F8FBFC" />
+                                        <Setter Property="Stroke" Value="#167DA5" />
+                                        <Setter Property="StrokeThickness" Value="1.5" />
+                                    </Style>
+                                </Canvas.Resources>
+
+                                <Polyline Tag="L2" Points="8,0 85,0 161,70 161,98" />
+                                <Polyline Tag="L" Points="8,50 72,50 130,72 130,98" />
+                                <Polyline Tag="Minus" Points="8,100 90,100 145,144 186,144" />
+                                <Polyline Tag="Up" Points="8,150 88,150 112,157 135,157" />
+                                <Polyline Tag="Left" Points="8,200 80,200 94,180 113,180" />
+                                <Polyline Tag="Right" Points="8,250 85,250 135,180 158,180" />
+                                <Polyline Tag="Down" Points="8,300 92,300 135,235 135,203" />
+                                <Polyline Tag="Star" Points="8,350 95,350 172,216 196,216" />
+                                <Polyline Tag="R2" Points="422,0 345,0 273,70 273,98" />
+                                <Polyline Tag="R" Points="422,50 358,50 305,72 305,98" />
+                                <Polyline Tag="Plus" Points="422,100 350,100 330,118 247,118 247,144" />
+                                <Polyline Tag="X" Points="422,150 350,150 319,148 296,148" />
+                                <Polyline Tag="A" Points="422,200 350,200 336,180 329,180" />
+                                <Polyline Tag="Y" Points="422,250 340,250 290,179 266,179" />
+                                <Polyline Tag="B" Points="422,300 340,300 296,240 296,211" />
+                                <Polyline Tag="Logo" Points="422,350 335,350 260,216 236,216" />
+
+                                <Ellipse Tag="L2" Canvas.Left="157.5" Canvas.Top="94.5" />
+                                <Ellipse Tag="L" Canvas.Left="126.5" Canvas.Top="94.5" />
+                                <Ellipse Tag="Minus" Canvas.Left="182.5" Canvas.Top="140.5" />
+                                <Ellipse Tag="Up" Canvas.Left="131.5" Canvas.Top="153.5" />
+                                <Ellipse Tag="Left" Canvas.Left="109.5" Canvas.Top="176.5" />
+                                <Ellipse Tag="Right" Canvas.Left="154.5" Canvas.Top="176.5" />
+                                <Ellipse Tag="Down" Canvas.Left="131.5" Canvas.Top="199.5" />
+                                <Ellipse Tag="Star" Canvas.Left="192.5" Canvas.Top="212.5" />
+                                <Ellipse Tag="R2" Canvas.Left="269.5" Canvas.Top="94.5" />
+                                <Ellipse Tag="R" Canvas.Left="301.5" Canvas.Top="94.5" />
+                                <Ellipse Tag="Plus" Canvas.Left="243.5" Canvas.Top="140.5" />
+                                <Ellipse Tag="X" Canvas.Left="292.5" Canvas.Top="144.5" />
+                                <Ellipse Tag="A" Canvas.Left="325.5" Canvas.Top="176.5" />
+                                <Ellipse Tag="Y" Canvas.Left="262.5" Canvas.Top="175.5" />
+                                <Ellipse Tag="B" Canvas.Left="292.5" Canvas.Top="207.5" />
+                                <Ellipse Tag="Logo" Canvas.Left="232.5" Canvas.Top="212.5" />
+                            </Canvas>
+                        </Canvas>
+                    </Grid>
+
+                    <ItemsControl Grid.Column="2" ItemsSource="{Binding RightMappings}" VerticalAlignment="Center">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Height="50">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="24" />
+                                        <ColumnDefinition Width="110" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Button}" Foreground="{StaticResource AccentBrush}" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Center" HorizontalAlignment="Right" />
+                                    <TextBlock Grid.Column="1" Text="›" Foreground="#7d8790" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                                    <StackPanel Grid.Column="2">
+                                        <Button Content="{Binding Action}"
+                                                Command="{Binding DataContext.SelectMappingCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource MappingButtonStyle}" />
+                                        <TextBlock Text="{Binding SourceSlotText}" HorizontalAlignment="Center" Foreground="{StaticResource TextMutedBrush}" FontSize="10" Margin="0,2,0,0" />
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                </Grid>
+            </Border>
+            </Grid>
+
+            <Grid x:Name="MappingEditor">
+                <Grid.Style>
+                    <Style TargetType="Grid">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsMappingEditorOpen}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <DockPanel LastChildFill="True">
+                    <Button Content="{Binding Text.Back}"
+                            Command="{Binding CancelMappingEditCommand}"
+                            Style="{StaticResource ToolbarButtonStyle}"
+                            Margin="0,0,16,0"
+                            DockPanel.Dock="Left" />
+                    <StackPanel>
+                        <TextBlock Text="{Binding Text.EditMapping}" FontSize="22" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding EditorTitleText}" Margin="0,2,0,0" Foreground="{StaticResource AccentBrush}" FontSize="15" FontWeight="SemiBold" />
+                    </StackPanel>
+                </DockPanel>
+
+                <Button Grid.Row="1"
+                        Margin="0,14,0,12"
+                        MinHeight="72"
+                        Padding="16,10"
+                        HorizontalContentAlignment="Left"
+                        Background="{StaticResource AccentLightBrush}"
+                        BorderBrush="{StaticResource AccentBrush}"
+                        BorderThickness="1"
+                        PreviewKeyDown="OnKeyboardCapturePreviewKeyDown">
+                    <StackPanel>
+                        <TextBlock Text="{Binding Text.PhysicalKeyboardCapture}" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}" />
+                        <TextBlock Text="{Binding Text.CaptureInstructions}" Margin="0,4,0,0" Foreground="{StaticResource TextMutedBrush}" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Button>
+
+                <StackPanel Grid.Row="2" Margin="0,0,0,8">
+                    <TextBlock Text="{Binding Text.KeyPicker}" Style="{StaticResource SectionLabelStyle}" Margin="0,0,0,6" />
+                    <ListBox ItemsSource="{Binding KeyCategories}"
+                             SelectedItem="{Binding SelectedKeyCategory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Margin" Value="0,0,8,6" />
+                                <Setter Property="Padding" Value="12,6" />
+                                <Setter Property="Foreground" Value="#1f2933" />
+                                <Setter Property="Background" Value="#ffffff" />
+                                <Setter Property="BorderBrush" Value="{StaticResource BorderBrushSoft}" />
+                                <Setter Property="BorderThickness" Value="1" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                                    Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource AccentLightBrush}" />
+                                        <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+                                        <Setter Property="Foreground" Value="{StaticResource AccentBrush}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DisplayName}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+
+                <ItemsControl Grid.Row="3" ItemsSource="{Binding SelectedKeyCategory.Rows}" VerticalAlignment="Top">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ItemsControl ItemsSource="{Binding Options}" HorizontalAlignment="Center">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Label}"
+                                                Command="{Binding DataContext.SelectKeyOptionCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}"
+                                                Style="{StaticResource KeyOptionButtonStyle}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Grid Grid.Row="4" Margin="0,8,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Margin="0,0,16,0">
+                        <TextBlock Text="{Binding Text.FreeformAction}" Style="{StaticResource SectionLabelStyle}" />
+                        <TextBox Text="{Binding PendingAction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                 Height="42"
+                                 FontSize="16"
+                                 Margin="0,6,0,0" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
+                        <Button Content="{Binding Text.Cancel}"
+                                Command="{Binding CancelMappingEditCommand}"
+                                Style="{StaticResource ToolbarButtonStyle}"
+                                Height="42"
+                                MinWidth="96"
+                                Margin="0,0,8,0" />
+                        <Button Content="{Binding Text.Apply}"
+                                Command="{Binding ApplySelectedMappingCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}"
+                                Height="42"
+                                MinWidth="96"
+                                Margin="0" />
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Grid>
+
+        <Border Grid.Row="2" Grid.Column="1" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="0,1,0,0">
+            <Grid Margin="24,0">
+                <TextBlock Text="{Binding Text.FooterText}"
+                           VerticalAlignment="Center"
+                           Foreground="{StaticResource TextMutedBrush}" />
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Content="{Binding Text.Reset}"
+                            Command="{Binding ResetMappingsCommand}"
+                            Width="190"
+                            Height="36"
+                            Style="{StaticResource ToolbarButtonStyle}" />
+                    <Button Content="{Binding Text.RestoreOriginalSettings}"
+                            Command="{Binding RestoreDeviceBackupCommand}"
+                            ToolTip="{Binding RestoreRequirementText}"
+                            ToolTipService.ShowOnDisabled="True"
+                            Width="176"
+                            Height="36"
+                            Style="{StaticResource ToolbarButtonStyle}" />
+                    <Button Content="{Binding Text.SaveToDevice}"
+                            Command="{Binding SaveToDeviceCommand}"
+                            Width="132"
+                            Height="36"
+                            Style="{StaticResource PrimaryButtonStyle}" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

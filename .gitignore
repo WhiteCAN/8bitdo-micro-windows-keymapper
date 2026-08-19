@@ -13,16 +13,25 @@ __pycache__/
 
 # Private notes that may contain device identifiers or raw captures
 docs/private/
+.codex-remote-attachments/
+.review-full-output/
+last-load-diagnostics.txt
+micro-config-backup-*.json
+profiles.json
 
 # Build outputs
+artifacts/
 bin/
 obj/
 .vs/
 .idea/
 
 # OS/editor noise
+.superpowers/
+.worktrees/
 *.user
 *.suo
 *.tmp
+*.pdb
 Thumbs.db
 Desktop.ini
