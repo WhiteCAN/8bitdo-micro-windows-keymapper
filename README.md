@@ -2,11 +2,16 @@
 
 **한국어** | [English](README.en.md)
 
+> [!CAUTION]
+> **주의: 이 프로그램은 충분히 검증된 공식 소프트웨어가 아닙니다.**
+>
+> 이 프로젝트는 OpenAI Codex를 활용한 바이브 코딩 방식으로만 개발되었습니다. 개발자가 전체 소스 코드를 줄 단위로 수동 검토하지 않았으며, 독립적인 보안 감사와 배포 파일의 백신·악성코드 검사를 완료하지 않았습니다. 자동 테스트 통과와 SHA-256 제공은 프로그램의 안전성을 보증하지 않습니다.
+>
+> 이 프로그램은 기기 설정을 직접 읽고 씁니다. 예상치 못한 오작동이나 설정 손실이 발생할 수 있으므로 테스트용 매핑부터 사용하고, 공식 모바일 앱으로 복구할 수 있도록 준비한 뒤 사용자 책임으로 실행하세요.
+
 MicroKey Studio는 8BitDo Micro를 위한 비공식 Windows 키매핑 도구입니다.
 
 이 프로젝트는 C#/.NET 8과 WPF로 개발합니다. 이 preview는 기기 설정 읽기, PC 로컬 프로필 편집, 백업 및 다시 읽기 보호 장치가 있는 현재 연결 기기 저장을 지원합니다. 기기 저장은 실기기에서 확인했고 복원의 실기기 최종 검증은 남아 있습니다.
-
-이 프로젝트의 기획, 구현, 디버깅 및 문서화는 OpenAI Codex를 활용한 바이브 코딩 방식으로만 진행했습니다.
 
 ## 다운로드
 
@@ -32,56 +37,21 @@ MicroKey Studio는 8BitDo Micro를 위한 비공식 Windows 키매핑 도구입�
 - 저장과 복원 모두 새 전체 설정 다시 읽기를 요구합니다. 저장은 읽기가 불완전하거나 요청한 매핑과 다르면 성공으로 처리하지 않으며, 복원은 전체 다시 읽기 결과가 백업과 바이트 단위로 같아야 합니다.
 - 기기 쓰기는 현재 연결된 기기의 활성 설정에 적용합니다. 기기 쪽 프로필 이름과 프로필 선택은 아직 해석되지 않아 기기 프로필을 선택할 수 없습니다.
 
-## 구조
-
-- `MicroKeyStudio.App`: WPF UI.
-- `MicroKeyStudio.Ble`: Windows BLE 전송 계층.
-- `MicroKeyStudio.Protocol`: 프로토콜 상수, 패킷 fixture, 매핑 모델.
-- `MicroKeyStudio.Storage`: 로컬 프로필 저장소.
-
 ## UI 기능
 
 - 한국어와 English 언어 선택.
 - 기기 찾기 후 프로필 목록을 채우고, 선택한 프로필을 불러오는 흐름.
 - 기기 찾기, 프로필 선택기, 프로필 개수, 프로필 불러오기 컨트롤을 한 영역에 배치.
-- 프로필 선택기 아래에 불러온 프로필 개수를 표시하는 진단 표시.
-- Windows가 Micro 서비스를 찾지 못할 때 BLE service/characteristic 발견 정보를 남기는 진단.
-- Windows 전체 서비스 목록에는 Micro 서비스가 보이지만 UUID 직접 조회가 비어 있을 때 fallback으로 연결.
-- 프로필 불러오기가 성공해도 받은 설정 페이지를 확인할 수 있도록 진단 파일을 남깁니다.
 - 로컬 프로필 추가, 이름 변경, 삭제, 불러오기 컨트롤.
 - 기기 읽기는 임시 이름의 기기 저장 프로필을 업데이트합니다. 프로필명 디코딩은 아직 확인되지 않았습니다.
 - 로컬 프로필은 사용자 문서 폴더의 `MicroKeyStudio/profiles.json`에 저장됩니다.
 - 매핑 칩 클릭 후 선택한 버튼 액션을 수정하는 편집 패널.
 - 공식 앱과 비슷한 키 선택 카테고리와 `Ctrl+C` 같은 동시 키 자유 입력칸.
-- 공식 모바일 앱 설정과 물리 버튼 순서를 대조할 수 있도록 매핑 칩 아래에 raw slot 번호를 표시합니다.
 - 이미지 위 연결선과 버튼 중심 종점으로 각 매핑 행에 해당하는 물리 버튼을 정확하게 표시합니다.
 - 기기에서 읽은 `슬립 비활성화` 상태 표시와 안전한 저장·재읽기 검증.
+- 저장 전 자동 백업과 저장 후 다시 읽기 검증.
 
-## 무설치 배포 파일 만들기
-
-설치가 필요 없는 Windows 패키지는 아래 명령으로 만듭니다.
-
-```powershell
-.\scripts\package-portable.ps1
-```
-
-생성 결과:
-
-- `artifacts/publish/MicroKeyStudio-v0.1.0-preview.31-YYYY-MM-DD-win-x64-portable/`: 무설치 실행 폴더.
-- `artifacts/releases/MicroKeyStudio-v0.1.0-preview.31-YYYY-MM-DD-win-x64-portable.zip`: GitHub Releases에 올릴 zip 파일.
-
-사용자는 zip을 풀고 `MicroKeyStudio.App.exe`를 실행하면 됩니다. self-contained 패키지라 별도 .NET 설치는 필요하지 않습니다. zip 안에는 한글·영문 README, `VERSION`, `CHANGELOG.md`, `CHANGELOG.ko.md`도 함께 들어가서 사용자가 릴리스 날짜와 변경 사항을 오프라인에서도 확인할 수 있습니다.
-
-## 프로토콜 메모
-
-Micro 앱 모드에서 관찰한 공개 UUID:
-
-- Service: `0000FF10-0000-1000-8000-00805F9B34FB`
-- Write/notify characteristic: `0000FF13-0000-1000-8000-00805F9B34FB`
-
-원본 캡처, APK, 기기 주소, 휴대폰 식별자는 이 저장소에 포함하지 않습니다.
-
-### 공개하면 안 되는 로컬 파일
+## 공개하면 안 되는 로컬 파일
 
 다음 파일은 문제 분석에 유용하지만 기기 설정이나 사용자 정의 이름을 포함할 수 있으므로 GitHub 저장소, Issue, Discussion에 원본 그대로 올리지 마세요.
 
@@ -91,8 +61,6 @@ Micro 앱 모드에서 관찰한 공개 UUID:
 - Android 버그 리포트, HCI/BLE 로그, APK, 디컴파일 결과, 휴대폰 또는 Bluetooth 식별자.
 
 오류를 공유할 때는 상태 문구만 복사하고 기기 이름, 개인 경로, 원시 HEX 값은 제거하세요.
-
-각 62바이트 write page의 CRC는 초기값 `0xFFFF`, 반사 다항식 `0xA001`을 사용하는 CRC-16입니다. payload 바이트 17-61(45바이트)을 계산하며, 결과는 바이트 7-8에 낮은 바이트부터 저장합니다. 바이트 13-16의 page offset도 little-endian입니다. 정제한 구현 사실과 검증 범위는 [docs/capture-analysis.ko.md](docs/capture-analysis.ko.md)를 확인하세요.
 
 ## Asset
 

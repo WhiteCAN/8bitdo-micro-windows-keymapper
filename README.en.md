@@ -2,11 +2,16 @@
 
 [한국어](README.md) | **English**
 
+> [!CAUTION]
+> **Warning: this is not fully verified official software.**
+>
+> This project was developed entirely through vibe coding with OpenAI Codex. The developer has not manually reviewed every line of source code, and no independent security audit or antivirus/malware scan of the distributed files has been completed. Passing automated tests and providing a SHA-256 checksum do not guarantee that the program is safe.
+>
+> This program directly reads and writes device settings. Unexpected behavior or configuration loss may occur. Start with test mappings, keep the official mobile app available for recovery, and use the program at your own risk.
+
 MicroKey Studio is an unofficial Windows key mapping tool for the 8BitDo Micro.
 
 The project is built with C#/.NET 8 and WPF. This preview supports reading device settings, editing local profiles, and generated writes to the currently connected device with backup and readback safeguards. Device save has been hardware-checked; final hardware verification of restore remains.
-
-The planning, implementation, debugging, and documentation for this project were completed entirely through vibe coding with OpenAI Codex.
 
 ## Download
 
@@ -32,56 +37,21 @@ This is an experimental community project. Writing unsupported configuration dat
 - Each save and restore requires a fresh complete configuration readback. A save rejects incomplete readback or a mismatch in a requested mapping; a restore requires the complete readback to match the backup byte-for-byte.
 - Device writes apply to the active configuration of the connected device. Device-side profile names and profile selection are not decoded, so choosing among device profiles is not supported.
 
-## Architecture
-
-- `MicroKeyStudio.App`: WPF UI.
-- `MicroKeyStudio.Ble`: Windows BLE transport.
-- `MicroKeyStudio.Protocol`: protocol constants, packet fixtures, mapping model.
-- `MicroKeyStudio.Storage`: local profile storage.
-
 ## UI Features
 
 - Korean and English language setting choices.
 - Find device, populate profile list, then load selected profile workflow.
 - Device find, profile selector, profile count, and Load profile controls are grouped together.
-- Visible profile count below the profile selector for load diagnostics.
-- BLE service and characteristic discovery diagnostics when Windows cannot find the Micro service.
-- Fallback service discovery when Windows lists the Micro service but UUID-specific lookup returns empty.
-- Successful profile loads also write diagnostics so received config pages can be inspected.
 - Local profile create, rename, delete, and load controls.
 - Device reads update a temporary-named device-stored profile. Profile-name decoding has not been identified yet.
 - Local profiles are saved to the user's Documents `MicroKeyStudio/profiles.json` file.
 - Clickable mapping chips with an edit panel for selected button actions.
 - Official-app-style key picker categories plus a freeform chord field for actions such as `Ctrl+C`.
-- Raw source slot labels under mapping chips so physical-button order can be calibrated against official mobile app settings.
 - Above-image connector lines and button-center endpoints that precisely identify the physical button for each mapping row.
 - Device-read Disable Sleep state with guarded save and fresh readback verification.
+- Automatic backup before saving and fresh readback verification after saving.
 
-## Portable Release
-
-Build a no-installer Windows package:
-
-```powershell
-.\scripts\package-portable.ps1
-```
-
-The script creates:
-
-- `artifacts/publish/MicroKeyStudio-v0.1.0-preview.31-YYYY-MM-DD-win-x64-portable/`: portable app folder.
-- `artifacts/releases/MicroKeyStudio-v0.1.0-preview.31-YYYY-MM-DD-win-x64-portable.zip`: upload this zip to GitHub Releases.
-
-Users can extract the zip and run `MicroKeyStudio.App.exe`. No separate .NET install is required because the package is self-contained. The zip also includes Korean and English README files, `VERSION`, `CHANGELOG.md`, and `CHANGELOG.ko.md` so users can check release date and changes offline.
-
-## Protocol Notes
-
-Observed public Micro app-mode UUIDs:
-
-- Service: `0000FF10-0000-1000-8000-00805F9B34FB`
-- Write/notify characteristic: `0000FF13-0000-1000-8000-00805F9B34FB`
-
-Raw captures, APKs, device addresses, and phone identifiers are intentionally excluded from this repository.
-
-### Local Files That Must Stay Private
+## Local Files That Must Stay Private
 
 The following files can help with troubleshooting but may contain device configuration or user-defined names. Do not upload them unchanged to a GitHub repository, Issue, or Discussion.
 
@@ -91,8 +61,6 @@ The following files can help with troubleshooting but may contain device configu
 - Android bug reports, HCI/BLE logs, APKs, decompiled output, and phone or Bluetooth identifiers.
 
 When reporting an error, share only the status text after removing device names, personal paths, and raw HEX values.
-
-For each 62-byte write page, the CRC is CRC-16 with initial value `0xFFFF` and reflected polynomial `0xA001`. It covers payload bytes 17-61 (45 bytes) and is stored low byte then high byte in bytes 7-8; the page offset in bytes 13-16 is also little-endian. See [docs/capture-analysis.md](docs/capture-analysis.md) for the sanitized implementation facts and verification boundary.
 
 ## Assets
 
