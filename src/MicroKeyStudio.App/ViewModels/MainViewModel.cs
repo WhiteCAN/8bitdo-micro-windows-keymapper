@@ -228,6 +228,8 @@ public sealed class MainViewModel : INotifyPropertyChanged, IAsyncDisposable
             OnPropertyChanged(nameof(EditorTitleText));
             OnPropertyChanged(nameof(SleepSettingStatusText));
             OnPropertyChanged(nameof(RestoreRequirementText));
+            OnPropertyChanged(nameof(ConnectionStatusText));
+            OnPropertyChanged(nameof(SaveRequirementText));
             Status = isEnglish ? "Language changed to English." : "언어가 한국어로 변경되었습니다.";
         }
     }
@@ -326,6 +328,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IAsyncDisposable
 
             _isMappingEditorOpen = value;
             OnPropertyChanged();
+            RaiseCommandStates();
         }
     }
 
@@ -364,6 +367,20 @@ public sealed class MainViewModel : INotifyPropertyChanged, IAsyncDisposable
             : (SelectedLanguage == "English"
                 ? "Change the setting, then use Save to device."
                 : "설정을 변경한 뒤 기기에 저장을 누르세요.");
+
+    public string ConnectionStatusText => IsConnected
+        ? (SelectedLanguage == "English" ? "Device connected" : "기기 연결됨")
+        : (SelectedLanguage == "English" ? "Device not connected · Local profile" : "기기 연결 안 됨 · PC 프로필");
+
+    public string SaveRequirementText => IsBusy
+        ? (SelectedLanguage == "English" ? "Wait for the current device operation." : "현재 기기 작업이 끝날 때까지 기다리세요.")
+        : IsMappingEditorOpen
+            ? (SelectedLanguage == "English" ? "Apply to the PC profile first. Save to the device from the overview." : "먼저 PC 프로필에 적용하세요. 기기 저장은 매핑 화면에서 진행합니다.")
+            : !IsConnected || _currentSnapshot is null
+                ? (SelectedLanguage == "English" ? "Connect a device and load its settings to save." : "기기에 저장하려면 기기를 연결하고 설정을 불러오세요.")
+                : !CanSaveToDevice()
+                    ? (SelectedLanguage == "English" ? "A mapping is unsupported. Choose a supported key combination." : "지원하지 않는 매핑이 있습니다. 지원하는 키 조합을 선택하세요.")
+                    : (SelectedLanguage == "English" ? "PC profile changes are saved separately. Use Save to device to update the device." : "PC 프로필과 기기는 별도로 저장됩니다. 기기에 반영하려면 기기에 저장을 누르세요.");
 
     public string RestoreRequirementText => SelectedLanguage == "English"
         ? "Restores the latest pre-save backup. Requires a connected device and a valid backup."
@@ -586,7 +603,7 @@ public sealed class MainViewModel : INotifyPropertyChanged, IAsyncDisposable
 
     private bool CanSaveToDevice()
     {
-        if (!IsConnected || IsBusy || _currentSnapshot is null)
+        if (!IsConnected || IsBusy || IsMappingEditorOpen || _currentSnapshot is null)
         {
             return false;
         }
@@ -1089,6 +1106,8 @@ public sealed class MainViewModel : INotifyPropertyChanged, IAsyncDisposable
 
     private void RaiseCommandStates()
     {
+        OnPropertyChanged(nameof(ConnectionStatusText));
+        OnPropertyChanged(nameof(SaveRequirementText));
         (ScanCommand as RelayCommand)?.RaiseCanExecuteChanged();
         (ConnectCommand as RelayCommand)?.RaiseCanExecuteChanged();
         (LoadSelectedProfileCommand as RelayCommand)?.RaiseCanExecuteChanged();
@@ -1819,7 +1838,7 @@ public sealed record UiText(
         "아래 영역을 누른 뒤 원하는 키 또는 키 조합을 누르세요.",
         "자유 입력 동작",
         "취소",
-        "적용",
+        "PC 프로필에 적용",
         "기기에 저장",
         "최근 백업 복원",
         "확인",
@@ -1882,7 +1901,7 @@ public sealed record UiText(
         "Click below, then press a key or key chord.",
         "Freeform action",
         "Cancel",
-        "Apply",
+        "Apply to PC profile",
         "Save to device",
         "Restore latest backup",
         "Confirmation",

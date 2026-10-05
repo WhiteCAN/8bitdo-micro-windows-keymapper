@@ -12,6 +12,37 @@ namespace MicroKeyStudio.App.Tests;
 public sealed class MainViewModelTests
 {
     [Fact]
+    public async Task Editing_a_mapping_blocks_device_save_until_applied_or_canceled()
+    {
+        using var transport = new FakeBleTransport();
+        transport.QueueCollectedNotificationBatch(CreateValidConfigPages());
+        var viewModel = CreateSaveViewModel(transport, new FakeConfirmationService());
+        await ConnectAsync(viewModel);
+        Assert.True(viewModel.SaveToDeviceCommand.CanExecute(null));
+        int notifications = 0;
+        viewModel.SaveToDeviceCommand.CanExecuteChanged += (_, _) => notifications++;
+
+        viewModel.SelectMapping(viewModel.LeftMappings[0]);
+        viewModel.PendingAction = "F1";
+
+        Assert.False(viewModel.SaveToDeviceCommand.CanExecute(null));
+        await ((RelayCommand)viewModel.SaveToDeviceCommand).ExecuteAsync();
+        Assert.Empty(transport.WriteInvocations);
+
+        await ((RelayCommand)viewModel.CancelMappingEditCommand).ExecuteAsync();
+        Assert.True(viewModel.SaveToDeviceCommand.CanExecute(null));
+        Assert.True(notifications > 0);
+
+        viewModel.SelectMapping(viewModel.LeftMappings[0]);
+        viewModel.PendingAction = "F2";
+        await ((RelayCommand)viewModel.ApplySelectedMappingCommand).ExecuteAsync();
+        Assert.False(viewModel.IsMappingEditorOpen);
+        Assert.True(viewModel.SaveToDeviceCommand.CanExecute(null));
+        Assert.Equal("F2", viewModel.LeftMappings[0].Action);
+        Assert.Empty(transport.WriteInvocations);
+    }
+
+    [Fact]
     public void Default_mapping_display_has_left_and_right_button_rows()
     {
         using var transport = new FakeBleTransport();
@@ -66,7 +97,7 @@ public sealed class MainViewModelTests
             ["CaptureInstructions"] = ("아래 영역을 누른 뒤 원하는 키 또는 키 조합을 누르세요.", "Click below, then press a key or key chord."),
             ["FreeformAction"] = ("자유 입력 동작", "Freeform action"),
             ["Cancel"] = ("취소", "Cancel"),
-            ["Apply"] = ("적용", "Apply"),
+            ["Apply"] = ("PC 프로필에 적용", "Apply to PC profile"),
             ["FooterText"] = (
                 "기기 매핑을 저장하면 저장 직전 백업을 만들고 저장 후 전체 설정을 다시 읽어 검증합니다.",
                 "Saving device mappings creates a pre-save backup and verifies the complete settings with a fresh readback."),
@@ -1129,6 +1160,7 @@ public sealed class MainViewModelTests
         ButtonMappingDisplay rMapping = viewModel.RightMappings.Single(mapping => mapping.Id == "R");
         lMapping.Action = "Keypad 1";
         viewModel.SelectMapping(lMapping);
+        await ((RelayCommand)viewModel.CancelMappingEditCommand).ExecuteAsync();
         viewModel.PendingAction = "Keypad 2";
         viewModel.ProfileNameDraft = "Busy Profile";
         int profileCount = viewModel.DeviceProfiles.Count;
@@ -1195,7 +1227,7 @@ public sealed class MainViewModelTests
         Assert.Equal(profileCount, viewModel.DeviceProfiles.Count);
         Assert.Equal("Keypad 1", lMapping.Action);
         Assert.Same(lMapping, viewModel.SelectedMapping);
-        Assert.True(viewModel.IsMappingEditorOpen);
+        Assert.False(viewModel.IsMappingEditorOpen);
     }
 
     [Fact]
@@ -1219,6 +1251,7 @@ public sealed class MainViewModelTests
         lMapping.Action = "Keypad 1";
         viewModel.SelectMapping(lMapping);
 
+        await ((RelayCommand)viewModel.CancelMappingEditCommand).ExecuteAsync();
         Task save = ((RelayCommand)viewModel.SaveToDeviceCommand).ExecuteAsync();
         await transport.WaitForBlockedCollectionAsync().WaitAsync(TimeSpan.FromSeconds(2));
         try

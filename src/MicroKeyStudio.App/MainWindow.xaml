@@ -37,11 +37,28 @@
         <Style x:Key="MappingButtonStyle" TargetType="Button">
             <Setter Property="Height" Value="34" />
             <Setter Property="Width" Value="106" />
-            <Setter Property="Foreground" Value="#ffffff" />
-            <Setter Property="Background" Value="{StaticResource AccentBrush}" />
-            <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+            <Setter Property="Foreground" Value="#1f2933" />
+            <Setter Property="Background" Value="{StaticResource SurfaceBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrushSoft}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="ToolTip" Value="{Binding SourceSlotText}" />
+            <Setter Property="AutomationProperties.HelpText" Value="{Binding DataContext.Text.MappingHelp, RelativeSource={RelativeSource AncestorType=Window}}" />
+            <Setter Property="AutomationProperties.Name">
+                <Setter.Value>
+                    <MultiBinding StringFormat="{}{0}: {1}">
+                        <Binding Path="Button" />
+                        <Binding Path="Action" />
+                    </MultiBinding>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                    <Setter Property="Background" Value="{StaticResource AccentBrush}" />
+                    <Setter Property="Foreground" Value="White" />
+                    <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
 
         <Style x:Key="KeyOptionButtonStyle" TargetType="Button">
@@ -66,7 +83,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="64" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250" />
@@ -87,15 +104,16 @@
                     </Border>
                 </StackPanel>
                 <TextBlock Grid.Column="1"
-                           Text="{Binding Status}"
+                           Text="{Binding Status}" TextTrimming="CharacterEllipsis" ToolTip="{Binding Status}"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
                            Foreground="{StaticResource TextMutedBrush}"
-                           Margin="0,0,0,0" />
+                           Margin="24,0,0,0" />
             </Grid>
         </Border>
 
         <Border Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Background="{StaticResource PanelBrush}" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="0,0,1,0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <Grid Margin="18">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -111,21 +129,22 @@
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Margin="0,24,0,0">
+                    <TextBlock Text="{Binding ConnectionStatusText}" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,0,0,8" />
                     <TextBlock Text="{Binding Text.DeviceSettings}" Style="{StaticResource SectionLabelStyle}" />
                     <Button Content="{Binding Text.FindDevice}" Command="{Binding ScanCommand}" Height="32" Margin="0,8,0,0" Style="{StaticResource ToolbarButtonStyle}" />
                     <TextBlock Text="{Binding Text.Profile}" Style="{StaticResource SectionLabelStyle}" Margin="0,14,0,0" />
                     <ComboBox Height="34"
                               Margin="0,8,0,0"
-                              ItemsSource="{Binding DeviceProfiles}"
+                              ItemsSource="{Binding DeviceProfiles}" AutomationProperties.Name="{Binding Text.Profile}"
                               SelectedItem="{Binding SelectedProfile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               DisplayMemberPath="DisplayName" />
                     <TextBlock Text="{Binding ProfileSummaryText}"
                                TextWrapping="Wrap"
                                Margin="0,6,0,0"
                                Foreground="{StaticResource TextMutedBrush}" />
-                    <Button Content="{Binding Text.LoadSavedSettings}" Command="{Binding LoadSelectedProfileCommand}" Height="32" Margin="0,8,0,0" Style="{StaticResource PrimaryButtonStyle}" />
+                    <Button Content="{Binding Text.LoadSavedSettings}" Command="{Binding LoadSelectedProfileCommand}" Height="32" Margin="0,8,0,0" Style="{StaticResource ToolbarButtonStyle}" />
                     <TextBlock Text="{Binding Text.ProfileName}" Style="{StaticResource SectionLabelStyle}" Margin="0,14,0,0" />
-                    <TextBox Text="{Binding ProfileNameDraft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBox AutomationProperties.Name="{Binding Text.ProfileName}" Text="{Binding ProfileNameDraft, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Height="32"
                              Margin="0,8,0,0" />
                     <StackPanel Margin="0,8,0,0">
@@ -153,7 +172,7 @@
                     <TextBlock Text="{Binding Text.Language}" Margin="0,8,0,0" Foreground="{StaticResource TextMutedBrush}" />
                     <ComboBox Height="34"
                               Margin="0,6,0,0"
-                              ItemsSource="{Binding Languages}"
+                              ItemsSource="{Binding Languages}" AutomationProperties.Name="{Binding Text.Language}"
                               SelectedItem="{Binding SelectedLanguage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
 
@@ -164,6 +183,7 @@
                     </StackPanel>
                 </Border>
             </Grid>
+            </ScrollViewer>
         </Border>
 
         <Grid Grid.Row="1" Grid.Column="1" Margin="24">
@@ -199,7 +219,8 @@
             </DockPanel>
 
             <Border Grid.Row="1" Margin="0,18,0,0" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="1" CornerRadius="8">
-                <Grid Margin="22">
+                <Viewbox Stretch="Uniform" StretchDirection="DownOnly" Margin="16">
+                <Grid Width="900" Height="420">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="204" />
                         <ColumnDefinition Width="*" />
@@ -215,12 +236,12 @@
                                         <ColumnDefinition Width="24" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel>
+                                    <StackPanel VerticalAlignment="Center">
                                         <Button Content="{Binding Action}"
                                                 Command="{Binding DataContext.SelectMappingCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource MappingButtonStyle}" />
-                                        <TextBlock Text="{Binding SourceSlotText}" HorizontalAlignment="Center" Foreground="{StaticResource TextMutedBrush}" FontSize="10" Margin="0,2,0,0" />
+
                                     </StackPanel>
                                     <TextBlock Grid.Column="1" Text="‹" Foreground="#7d8790" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
                                     <TextBlock Grid.Column="2" Text="{Binding Button}" Foreground="{StaticResource AccentBrush}" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Center" />
@@ -236,7 +257,7 @@
                         </Grid.RowDefinitions>
 
                         <Canvas x:Name="DeviceMappingCanvas" Grid.Row="0" Width="430" Height="360" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Source="Assets/Images/8bitdo-micro-blue-front.png"
+                            <Image AutomationProperties.Name="8BitDo Micro" Source="Assets/Images/8bitdo-micro-blue-front.png"
                                    Stretch="Uniform"
                                    Width="360"
                                    Canvas.Left="36"
@@ -254,6 +275,13 @@
                                         <Setter Property="StrokeLineJoin" Value="Round" />
                                         <Setter Property="StrokeStartLineCap" Value="Round" />
                                         <Setter Property="StrokeEndLineCap" Value="Round" />
+                                        <Setter Property="Opacity" Value="0.45" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                <Setter Property="Opacity" Value="1" />
+                                                <Setter Property="StrokeThickness" Value="2.5" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
                                     </Style>
                                     <Style TargetType="Ellipse">
                                         <Setter Property="Width" Value="7" />
@@ -261,42 +289,49 @@
                                         <Setter Property="Fill" Value="#F8FBFC" />
                                         <Setter Property="Stroke" Value="#167DA5" />
                                         <Setter Property="StrokeThickness" Value="1.5" />
+                                        <Setter Property="Opacity" Value="0.45" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                                <Setter Property="Opacity" Value="1" />
+                                                <Setter Property="StrokeThickness" Value="2.5" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
                                     </Style>
                                 </Canvas.Resources>
 
-                                <Polyline Tag="L2" Points="8,0 85,0 161,70 161,98" />
-                                <Polyline Tag="L" Points="8,50 72,50 130,72 130,98" />
-                                <Polyline Tag="Minus" Points="8,100 90,100 145,144 186,144" />
-                                <Polyline Tag="Up" Points="8,150 88,150 112,157 135,157" />
-                                <Polyline Tag="Left" Points="8,200 80,200 94,180 113,180" />
-                                <Polyline Tag="Right" Points="8,250 85,250 135,180 158,180" />
-                                <Polyline Tag="Down" Points="8,300 92,300 135,235 135,203" />
-                                <Polyline Tag="Star" Points="8,350 95,350 172,216 196,216" />
-                                <Polyline Tag="R2" Points="422,0 345,0 273,70 273,98" />
-                                <Polyline Tag="R" Points="422,50 358,50 305,72 305,98" />
-                                <Polyline Tag="Plus" Points="422,100 350,100 330,118 247,118 247,144" />
-                                <Polyline Tag="X" Points="422,150 350,150 319,148 296,148" />
-                                <Polyline Tag="A" Points="422,200 350,200 336,180 329,180" />
-                                <Polyline Tag="Y" Points="422,250 340,250 290,179 266,179" />
-                                <Polyline Tag="B" Points="422,300 340,300 296,240 296,211" />
-                                <Polyline Tag="Logo" Points="422,350 335,350 260,216 236,216" />
+                                <Polyline DataContext="{Binding LeftMappings[0]}" Tag="L2" Points="8,0 85,0 161,70 161,98" />
+                                <Polyline DataContext="{Binding LeftMappings[1]}" Tag="L" Points="8,50 72,50 130,72 130,98" />
+                                <Polyline DataContext="{Binding LeftMappings[2]}" Tag="Minus" Points="8,100 90,100 145,144 186,144" />
+                                <Polyline DataContext="{Binding LeftMappings[3]}" Tag="Up" Points="8,150 88,150 112,157 135,157" />
+                                <Polyline DataContext="{Binding LeftMappings[4]}" Tag="Left" Points="8,200 80,200 94,180 113,180" />
+                                <Polyline DataContext="{Binding LeftMappings[5]}" Tag="Right" Points="8,250 85,250 135,180 158,180" />
+                                <Polyline DataContext="{Binding LeftMappings[6]}" Tag="Down" Points="8,300 92,300 135,235 135,203" />
+                                <Polyline DataContext="{Binding LeftMappings[7]}" Tag="Star" Points="8,350 95,350 172,216 196,216" />
+                                <Polyline DataContext="{Binding RightMappings[0]}" Tag="R2" Points="422,0 345,0 273,70 273,98" />
+                                <Polyline DataContext="{Binding RightMappings[1]}" Tag="R" Points="422,50 358,50 305,72 305,98" />
+                                <Polyline DataContext="{Binding RightMappings[2]}" Tag="Plus" Points="422,100 350,100 330,118 247,118 247,144" />
+                                <Polyline DataContext="{Binding RightMappings[3]}" Tag="X" Points="422,150 350,150 319,148 296,148" />
+                                <Polyline DataContext="{Binding RightMappings[4]}" Tag="A" Points="422,200 350,200 336,180 329,180" />
+                                <Polyline DataContext="{Binding RightMappings[5]}" Tag="Y" Points="422,250 340,250 290,179 266,179" />
+                                <Polyline DataContext="{Binding RightMappings[6]}" Tag="B" Points="422,300 340,300 296,240 296,211" />
+                                <Polyline DataContext="{Binding RightMappings[7]}" Tag="Logo" Points="422,350 335,350 260,216 236,216" />
 
-                                <Ellipse Tag="L2" Canvas.Left="157.5" Canvas.Top="94.5" />
-                                <Ellipse Tag="L" Canvas.Left="126.5" Canvas.Top="94.5" />
-                                <Ellipse Tag="Minus" Canvas.Left="182.5" Canvas.Top="140.5" />
-                                <Ellipse Tag="Up" Canvas.Left="131.5" Canvas.Top="153.5" />
-                                <Ellipse Tag="Left" Canvas.Left="109.5" Canvas.Top="176.5" />
-                                <Ellipse Tag="Right" Canvas.Left="154.5" Canvas.Top="176.5" />
-                                <Ellipse Tag="Down" Canvas.Left="131.5" Canvas.Top="199.5" />
-                                <Ellipse Tag="Star" Canvas.Left="192.5" Canvas.Top="212.5" />
-                                <Ellipse Tag="R2" Canvas.Left="269.5" Canvas.Top="94.5" />
-                                <Ellipse Tag="R" Canvas.Left="301.5" Canvas.Top="94.5" />
-                                <Ellipse Tag="Plus" Canvas.Left="243.5" Canvas.Top="140.5" />
-                                <Ellipse Tag="X" Canvas.Left="292.5" Canvas.Top="144.5" />
-                                <Ellipse Tag="A" Canvas.Left="325.5" Canvas.Top="176.5" />
-                                <Ellipse Tag="Y" Canvas.Left="262.5" Canvas.Top="175.5" />
-                                <Ellipse Tag="B" Canvas.Left="292.5" Canvas.Top="207.5" />
-                                <Ellipse Tag="Logo" Canvas.Left="232.5" Canvas.Top="212.5" />
+                                <Ellipse DataContext="{Binding LeftMappings[0]}" Tag="L2" Canvas.Left="157.5" Canvas.Top="94.5" />
+                                <Ellipse DataContext="{Binding LeftMappings[1]}" Tag="L" Canvas.Left="126.5" Canvas.Top="94.5" />
+                                <Ellipse DataContext="{Binding LeftMappings[2]}" Tag="Minus" Canvas.Left="182.5" Canvas.Top="140.5" />
+                                <Ellipse DataContext="{Binding LeftMappings[3]}" Tag="Up" Canvas.Left="131.5" Canvas.Top="153.5" />
+                                <Ellipse DataContext="{Binding LeftMappings[4]}" Tag="Left" Canvas.Left="109.5" Canvas.Top="176.5" />
+                                <Ellipse DataContext="{Binding LeftMappings[5]}" Tag="Right" Canvas.Left="154.5" Canvas.Top="176.5" />
+                                <Ellipse DataContext="{Binding LeftMappings[6]}" Tag="Down" Canvas.Left="131.5" Canvas.Top="199.5" />
+                                <Ellipse DataContext="{Binding LeftMappings[7]}" Tag="Star" Canvas.Left="192.5" Canvas.Top="212.5" />
+                                <Ellipse DataContext="{Binding RightMappings[0]}" Tag="R2" Canvas.Left="269.5" Canvas.Top="94.5" />
+                                <Ellipse DataContext="{Binding RightMappings[1]}" Tag="R" Canvas.Left="301.5" Canvas.Top="94.5" />
+                                <Ellipse DataContext="{Binding RightMappings[2]}" Tag="Plus" Canvas.Left="243.5" Canvas.Top="140.5" />
+                                <Ellipse DataContext="{Binding RightMappings[3]}" Tag="X" Canvas.Left="292.5" Canvas.Top="144.5" />
+                                <Ellipse DataContext="{Binding RightMappings[4]}" Tag="A" Canvas.Left="325.5" Canvas.Top="176.5" />
+                                <Ellipse DataContext="{Binding RightMappings[5]}" Tag="Y" Canvas.Left="262.5" Canvas.Top="175.5" />
+                                <Ellipse DataContext="{Binding RightMappings[6]}" Tag="B" Canvas.Left="292.5" Canvas.Top="207.5" />
+                                <Ellipse DataContext="{Binding RightMappings[7]}" Tag="Logo" Canvas.Left="232.5" Canvas.Top="212.5" />
                             </Canvas>
                         </Canvas>
                     </Grid>
@@ -312,12 +347,12 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="{Binding Button}" Foreground="{StaticResource AccentBrush}" FontSize="17" FontWeight="SemiBold" VerticalAlignment="Center" HorizontalAlignment="Right" />
                                     <TextBlock Grid.Column="1" Text="›" Foreground="#7d8790" FontSize="24" VerticalAlignment="Center" HorizontalAlignment="Center" />
-                                    <StackPanel Grid.Column="2">
+                                    <StackPanel Grid.Column="2" VerticalAlignment="Center">
                                         <Button Content="{Binding Action}"
                                                 Command="{Binding DataContext.SelectMappingCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding}"
                                                 Style="{StaticResource MappingButtonStyle}" />
-                                        <TextBlock Text="{Binding SourceSlotText}" HorizontalAlignment="Center" Foreground="{StaticResource TextMutedBrush}" FontSize="10" Margin="0,2,0,0" />
+
                                     </StackPanel>
                                 </Grid>
                             </DataTemplate>
@@ -325,6 +360,7 @@
                     </ItemsControl>
 
                 </Grid>
+                </Viewbox>
             </Border>
             </Grid>
 
@@ -367,6 +403,8 @@
                         Background="{StaticResource AccentLightBrush}"
                         BorderBrush="{StaticResource AccentBrush}"
                         BorderThickness="1"
+                        AutomationProperties.Name="{Binding Text.PhysicalKeyboardCapture}"
+                        AutomationProperties.HelpText="{Binding Text.CaptureInstructions}"
                         PreviewKeyDown="OnKeyboardCapturePreviewKeyDown">
                     <StackPanel>
                         <TextBlock Text="{Binding Text.PhysicalKeyboardCapture}" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}" />
@@ -389,6 +427,7 @@
                         </ListBox.ItemsPanel>
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
+                                <Setter Property="AutomationProperties.Name" Value="{Binding DisplayName}" />
                                 <Setter Property="Margin" Value="0,0,8,6" />
                                 <Setter Property="Padding" Value="12,6" />
                                 <Setter Property="Foreground" Value="#1f2933" />
@@ -424,7 +463,8 @@
                     </ListBox>
                 </StackPanel>
 
-                <ItemsControl Grid.Row="3" ItemsSource="{Binding SelectedKeyCategory.Rows}" VerticalAlignment="Top">
+                <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding SelectedKeyCategory.Rows}" VerticalAlignment="Top">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel />
@@ -451,6 +491,8 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
+                </ScrollViewer>
+
                 <Grid Grid.Row="4" Margin="0,8,0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -458,7 +500,7 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Margin="0,0,16,0">
                         <TextBlock Text="{Binding Text.FreeformAction}" Style="{StaticResource SectionLabelStyle}" />
-                        <TextBox Text="{Binding PendingAction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox AutomationProperties.Name="{Binding Text.FreeformAction}" Text="{Binding PendingAction, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  Height="42"
                                  FontSize="16"
                                  Margin="0,6,0,0" />
@@ -482,29 +524,34 @@
         </Grid>
 
         <Border Grid.Row="2" Grid.Column="1" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource BorderBrushSoft}" BorderThickness="0,1,0,0">
-            <Grid Margin="24,0">
-                <TextBlock Text="{Binding Text.FooterText}"
-                           VerticalAlignment="Center"
-                           Foreground="{StaticResource TextMutedBrush}" />
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <Button Content="{Binding Text.Reset}"
-                            Command="{Binding ResetMappingsCommand}"
-                            Width="190"
-                            Height="36"
-                            Style="{StaticResource ToolbarButtonStyle}" />
-                    <Button Content="{Binding Text.RestoreOriginalSettings}"
-                            Command="{Binding RestoreDeviceBackupCommand}"
-                            ToolTip="{Binding RestoreRequirementText}"
-                            ToolTipService.ShowOnDisabled="True"
-                            Width="176"
-                            Height="36"
-                            Style="{StaticResource ToolbarButtonStyle}" />
-                    <Button Content="{Binding Text.SaveToDevice}"
-                            Command="{Binding SaveToDeviceCommand}"
-                            Width="132"
-                            Height="36"
-                            Style="{StaticResource PrimaryButtonStyle}" />
-                </StackPanel>
+            <Grid Margin="24,12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Text="{Binding SaveRequirementText}" TextWrapping="Wrap"
+                           AutomationProperties.LiveSetting="Polite"
+                           Foreground="{StaticResource TextMutedBrush}" Margin="0,0,0,8" />
+                <WrapPanel Grid.Row="1" HorizontalAlignment="Right">
+                    <WrapPanel.Style>
+                        <Style TargetType="WrapPanel">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsMappingEditorOpen}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </WrapPanel.Style>
+                    <Button Content="{Binding Text.Reset}" Command="{Binding ResetMappingsCommand}"
+                            Height="36" Style="{StaticResource ToolbarButtonStyle}" />
+                    <Button Content="{Binding Text.RestoreOriginalSettings}" Command="{Binding RestoreDeviceBackupCommand}"
+                            ToolTip="{Binding RestoreRequirementText}" ToolTipService.ShowOnDisabled="True"
+                            Height="36" Style="{StaticResource ToolbarButtonStyle}" />
+                    <Button Content="{Binding Text.SaveToDevice}" Command="{Binding SaveToDeviceCommand}"
+                            ToolTip="{Binding SaveRequirementText}" ToolTipService.ShowOnDisabled="True"
+                            AutomationProperties.HelpText="{Binding SaveRequirementText}"
+                            Height="36" Style="{StaticResource PrimaryButtonStyle}" />
+                </WrapPanel>
             </Grid>
         </Border>
     </Grid>
