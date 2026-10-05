@@ -2,6 +2,16 @@
 
 All notable user-facing changes to MicroKey Studio are recorded here.
 
+## [0.1.0-preview.32] - 2026-10-05
+
+### Improved
+
+- Added sidebar scrolling and separated footer guidance from action buttons.
+- Scaled the mapping diagram with the window and added scrolling to the key picker.
+- Clarified local profile application and blocked device saving while editing.
+- Added connection and save guidance and accessible names for controls.
+- Highlighted selected mappings and connectors; moved slot IDs into tooltips.
+
 ## [0.1.0-preview.31] - 2026-08-19
 
 ### Added

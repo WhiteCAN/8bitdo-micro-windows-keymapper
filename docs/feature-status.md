@@ -1,6 +1,12 @@
 # Feature Status
 
-Updated: 2026-08-19 (`0.1.0-preview.31`)
+Updated: 2026-10-05 (`0.1.0-preview.32`)
+
+## UI improvements in preview.32
+
+Sidebar and key-picker scrolling, separated footer guidance, selection emphasis and accessible labels are included. Apply to PC profile is separate from Save to device; device saving is blocked while the mapping editor is open. Connection and save requirements are visible on screen.
+
+Validation: 184 automated tests passed. Korean overview/editor screens and accessibility names were inspected. Physical device writes, restoration, English visual layout and DPI variations were not exercised in this UI update.
 
 | Feature | Status | Notes |
 | --- | --- | --- |

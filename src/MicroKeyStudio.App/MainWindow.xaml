@@ -100,7 +100,7 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="MicroKey Studio" FontSize="17" FontWeight="SemiBold" />
                     <Border Margin="12,0,0,0" Padding="8,3" CornerRadius="10" Background="{StaticResource AccentLightBrush}">
-                        <TextBlock Text="0.1.0-preview.31" Foreground="{StaticResource AccentBrush}" FontSize="11" FontWeight="SemiBold" />
+                        <TextBlock Text="0.1.0-preview.32" Foreground="{StaticResource AccentBrush}" FontSize="11" FontWeight="SemiBold" />
                     </Border>
                 </StackPanel>
                 <TextBlock Grid.Column="1"

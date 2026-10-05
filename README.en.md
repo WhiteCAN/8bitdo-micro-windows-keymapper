@@ -15,16 +15,16 @@ The project is built with C#/.NET 8 and WPF. This preview supports reading devic
 
 ## Download
 
-[Download MicroKey Studio 0.1.0-preview.31 for Windows x64 (portable ZIP)](https://github.com/WhiteCAN/8bitdo-micro-windows-keymapper/releases/download/v0.1.0-preview.31/MicroKeyStudio-v0.1.0-preview.31-2026-08-19-win-x64-portable.zip)
+[Download MicroKey Studio 0.1.0-preview.32 for Windows x64 (portable ZIP)](https://github.com/WhiteCAN/8bitdo-micro-windows-keymapper/releases/download/v0.1.0-preview.32/MicroKeyStudio-v0.1.0-preview.32-2026-10-05-win-x64-portable.zip)
 
 No installation is required. Extract the ZIP and run `MicroKeyStudio.App.exe`. Windows SmartScreen may display a warning.
 
-- [Release notes](https://github.com/WhiteCAN/8bitdo-micro-windows-keymapper/releases/tag/v0.1.0-preview.31)
-- SHA-256: `3766AA0ADB47E9C1B33375F69687A8BF6A906AC88E0ED2F235FD41BDB37762DF`
+- [Release notes](https://github.com/WhiteCAN/8bitdo-micro-windows-keymapper/releases/tag/v0.1.0-preview.32)
+- [SHA-256 checksum](https://github.com/WhiteCAN/8bitdo-micro-windows-keymapper/releases/download/v0.1.0-preview.32/SHA256SUMS.txt)
 
 ## Status
 
-Current version: `0.1.0-preview.31` released on `2026-08-19`.
+Current version: `0.1.0-preview.32` released on `2026-10-05`.
 
 Early development. See [feature-status.md](docs/feature-status.md) for the working, conditional, local-only, and not-yet-implemented features, and [CHANGELOG.md](CHANGELOG.md) for version history.
 

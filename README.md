@@ -15,16 +15,16 @@ MicroKey Studio는 8BitDo Micro를 위한 비공식 Windows 키매핑 도구입�
 
 ## 다운로드
 
-[MicroKey Studio 0.1.0-preview.31 Windows x64 포터블 ZIP 다운로드](https://github.com/WhiteCAN/8bitdo-micro-windows-keymapper/releases/download/v0.1.0-preview.31/MicroKeyStudio-v0.1.0-preview.31-2026-08-19-win-x64-portable.zip)
+[MicroKey Studio 0.1.0-preview.32 Windows x64 포터블 ZIP 다운로드](https://github.com/WhiteCAN/8bitdo-micro-windows-keymapper/releases/download/v0.1.0-preview.32/MicroKeyStudio-v0.1.0-preview.32-2026-10-05-win-x64-portable.zip)
 
 설치할 필요 없이 ZIP 압축을 풀고 `MicroKeyStudio.App.exe`를 실행하면 됩니다. Windows SmartScreen 경고가 표시될 수 있습니다.
 
-- [릴리스 정보](https://github.com/WhiteCAN/8bitdo-micro-windows-keymapper/releases/tag/v0.1.0-preview.31)
-- SHA-256: `3766AA0ADB47E9C1B33375F69687A8BF6A906AC88E0ED2F235FD41BDB37762DF`
+- [릴리스 정보](https://github.com/WhiteCAN/8bitdo-micro-windows-keymapper/releases/tag/v0.1.0-preview.32)
+- [SHA-256 checksum](https://github.com/WhiteCAN/8bitdo-micro-windows-keymapper/releases/download/v0.1.0-preview.32/SHA256SUMS.txt)
 
 ## 현재 상태
 
-현재 버전: `0.1.0-preview.31`, 릴리스 날짜: `2026-08-19`.
+현재 버전: `0.1.0-preview.32`, 릴리스 날짜: `2026-10-05`.
 
 초기 개발 단계입니다. 동작, 조건부 동작, PC 로컬 전용, 미구현 기능은 [feature-status.ko.md](docs/feature-status.ko.md), 버전별 변경 사항은 [CHANGELOG.ko.md](CHANGELOG.ko.md)를 확인하세요.
 
